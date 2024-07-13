@@ -1,5 +1,6 @@
 class Shop:
     def __init__(self):
+        # Ініціалізація магазину зі списком одягу, корзиною, адресою та методом оплати
         self.clothes = [
             {"id": 1, "name": "Футболка", "price": 500},
             {"id": 2, "name": "Штани", "price": 1000},
@@ -10,6 +11,7 @@ class Shop:
         self.payment_method = ""
 
     def show_clothes(self):
+        # Показує доступний одяг та дозволяє додавати його до корзини
         while True:
             print("\nДоступний одяг:")
             for item in self.clothes:
@@ -17,7 +19,7 @@ class Shop:
             print("\nВведіть ID одягу для додавання до корзини або '0' для виходу:")
             choice = input("Ваш вибір: ")
             if choice == "0":
-                break
+                break  # Вихід з меню показу одягу
             else:
                 try:
                     item_id = int(choice)
@@ -26,6 +28,7 @@ class Shop:
                     print("Неправильний ввід. Будь ласка, введіть число.")
 
     def add_to_cart(self, item_id):
+        # Додає вибраний одяг до корзини
         item = next((x for x in self.clothes if x["id"] == item_id), None)
         if item:
             self.cart.append(item)
@@ -34,6 +37,7 @@ class Shop:
             print("Неправильний ID одягу.")
 
     def show_cart(self):
+        # Показує одяг, який знаходиться в корзині
         if not self.cart:
             print("Ваша корзина порожня.")
         else:
@@ -42,9 +46,11 @@ class Shop:
                 print(f'{item["name"]} - {item["price"]} грн')
     
     def enter_address(self):
+        # Запитує адресу доставки у користувача
         self.address = input("Введіть адресу доставки: ")
 
     def choose_payment_method(self):
+        # Запитує спосіб оплати у користувача
         print("Виберіть спосіб оплати:")
         print("1. Картка")
         print("2. Готівка при отриманні")
@@ -57,12 +63,13 @@ class Shop:
             print("Неправильний вибір.")
 
     def checkout(self):
+        # Процедура оформлення замовлення
         if not self.cart:
             print("Ваша корзина порожня.")
             return
 
-        self.enter_address()
-        self.choose_payment_method()
+        self.enter_address()  # Введення адреси доставки
+        self.choose_payment_method()  # Вибір способу оплати
 
         if not self.address:
             print("Введіть адресу доставки.")
@@ -71,6 +78,7 @@ class Shop:
             print("Виберіть спосіб оплати.")
             return
 
+        # Показує підсумок замовлення
         print("\nПідсумок замовлення:")
         total = 0
         for item in self.cart:
@@ -83,6 +91,7 @@ class Shop:
 
 
 def main():
+    # Основне меню програми
     shop = Shop()
 
     while True:
@@ -95,14 +104,14 @@ def main():
         choice = input("Виберіть пункт меню: ")
 
         if choice == "1":
-            shop.show_clothes()
+            shop.show_clothes()  # Показує доступний одяг
         elif choice == "2":
-            shop.show_cart()
+            shop.show_cart()  # Показує корзину
         elif choice == "3":
-            shop.checkout()
+            shop.checkout()  # Початок оформлення замовлення
         elif choice == "4":
             print("До побачення!")
-            break
+            break  # Вихід з програми
         else:
             print("Неправильний вибір. Спробуйте ще раз.")
 
