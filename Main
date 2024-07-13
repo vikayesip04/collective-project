@@ -1,0 +1,111 @@
+class Shop:
+    def __init__(self):
+        self.clothes = [
+            {"id": 1, "name": "Футболка", "price": 500},
+            {"id": 2, "name": "Штани", "price": 1000},
+            {"id": 3, "name": "Куртка", "price": 1500}
+        ]
+        self.cart = []
+        self.address = ""
+        self.payment_method = ""
+
+    def show_clothes(self):
+        while True:
+            print("\nДоступний одяг:")
+            for item in self.clothes:
+                print(f'{item["id"]}. {item["name"]} - {item["price"]} грн')
+            print("\nВведіть ID одягу для додавання до корзини або '0' для виходу:")
+            choice = input("Ваш вибір: ")
+            if choice == "0":
+                break
+            else:
+                try:
+                    item_id = int(choice)
+                    self.add_to_cart(item_id)
+                except ValueError:
+                    print("Неправильний ввід. Будь ласка, введіть число.")
+
+    def add_to_cart(self, item_id):
+        item = next((x for x in self.clothes if x["id"] == item_id), None)
+        if item:
+            self.cart.append(item)
+            print(f'{item["name"]} додано до корзини.')
+        else:
+            print("Неправильний ID одягу.")
+
+    def show_cart(self):
+        if not self.cart:
+            print("Ваша корзина порожня.")
+        else:
+            print("\nВаш кошик:")
+            for item in self.cart:
+                print(f'{item["name"]} - {item["price"]} грн')
+    
+    def enter_address(self):
+        self.address = input("Введіть адресу доставки: ")
+
+    def choose_payment_method(self):
+        print("Виберіть спосіб оплати:")
+        print("1. Картка")
+        print("2. Готівка при отриманні")
+        choice = input("Введіть номер вибраного способу оплати: ")
+        if choice == "1":
+            self.payment_method = "Картка"
+        elif choice == "2":
+            self.payment_method = "Готівка при отриманні"
+        else:
+            print("Неправильний вибір.")
+
+    def checkout(self):
+        if not self.cart:
+            print("Ваша корзина порожня.")
+            return
+
+        self.enter_address()
+        self.choose_payment_method()
+
+        if not self.address:
+            print("Введіть адресу доставки.")
+            return
+        if not self.payment_method:
+            print("Виберіть спосіб оплати.")
+            return
+
+        print("\nПідсумок замовлення:")
+        total = 0
+        for item in self.cart:
+            print(f'{item["name"]} - {item["price"]} грн')
+            total += item["price"]
+        print(f'Загальна сума: {total} грн')
+        print(f'Адреса доставки: {self.address}')
+        print(f'Спосіб оплати: {self.payment_method}')
+        print("Дякуємо за ваше замовлення!")
+
+
+def main():
+    shop = Shop()
+
+    while True:
+        print("\nМеню:")
+        print("1. Показати одяг")
+        print("2. Корзина")
+        print("3. Оформити замовлення")
+        print("4. Вийти")
+
+        choice = input("Виберіть пункт меню: ")
+
+        if choice == "1":
+            shop.show_clothes()
+        elif choice == "2":
+            shop.show_cart()
+        elif choice == "3":
+            shop.checkout()
+        elif choice == "4":
+            print("До побачення!")
+            break
+        else:
+            print("Неправильний вибір. Спробуйте ще раз.")
+
+
+if __name__ == "__main__":
+    main()
