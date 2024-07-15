@@ -1,35 +1,104 @@
 class Shop:
     def __init__(self):
-        # Ініціалізація магазину зі списком одягу, корзиною, адресою та методом оплати
-        self.clothes = [
-            {"id": 1, "name": "Футболка", "price": 500},
-            {"id": 2, "name": "Штани", "price": 1000},
-            {"id": 3, "name": "Куртка", "price": 1500}
-        ]
+        self.clothes = {
+            "Футболки": [
+                {"id": 1, "name": "Футболка NIKE, біла", "price": 500},
+                {"id": 2, "name": "Футболка Adidas, чорна", "price": 550},
+                {"id": 3, "name": "Футболка Puma, червона", "price": 600},
+                {"id": 4, "name": "Футболка Reebok, синя", "price": 520},
+                {"id": 5, "name": "Футболка Under Armour, зелена", "price": 570},
+                {"id": 6, "name": "Футболка New Balance, жовта", "price": 590},
+                {"id": 7, "name": "Футболка Asics, рожева", "price": 530}
+            ],
+            "Штани": [
+                {"id": 8, "name": "Штани NIKE, сірі", "price": 1000},
+                {"id": 9, "name": "Штани Adidas, чорні", "price": 1050},
+                {"id": 10, "name": "Штани Puma, сині", "price": 1100},
+                {"id": 11, "name": "Штани Reebok, зелені", "price": 1020},
+                {"id": 12, "name": "Штани Under Armour, червоні", "price": 1070},
+                {"id": 13, "name": "Штани New Balance, жовті", "price": 1090},
+                {"id": 14, "name": "Штани Asics, білі", "price": 1030}
+            ],
+            "Взуття": [
+                {"id": 15, "name": "Кросівки NIKE, чорні", "price": 2000},
+                {"id": 16, "name": "Кросівки Adidas, білі", "price": 2050},
+                {"id": 17, "name": "Кросівки Puma, сірі", "price": 2100},
+                {"id": 18, "name": "Кросівки Reebok, червоні", "price": 2020},
+                {"id": 19, "name": "Кросівки Under Armour, сині", "price": 2070},
+                {"id": 20, "name": "Кросівки New Balance, зелені", "price": 2090},
+                {"id": 21, "name": "Кросівки Asics, жовті", "price": 2030}
+            ],
+            "Куртки": [
+                {"id": 22, "name": "Куртка NIKE, чорна", "price": 1500},
+                {"id": 23, "name": "Куртка Adidas, біла", "price": 1550},
+                {"id": 24, "name": "Куртка Puma, синя", "price": 1600},
+                {"id": 25, "name": "Куртка Reebok, червона", "price": 1520},
+                {"id": 26, "name": "Куртка Under Armour, зелена", "price": 1570},
+                {"id": 27, "name": "Куртка New Balance, жовта", "price": 1590},
+                {"id": 28, "name": "Куртка Asics, сіра", "price": 1530}
+            ],
+            "Шорти": [
+                {"id": 29, "name": "Шорти NIKE, чорні", "price": 700},
+                {"id": 30, "name": "Шорти Adidas, білі", "price": 750},
+                {"id": 31, "name": "Шорти Puma, червоні", "price": 800},
+                {"id": 32, "name": "Шорти Reebok, сині", "price": 720},
+                {"id": 33, "name": "Шорти Under Armour, зелені", "price": 770},
+                {"id": 34, "name": "Шорти New Balance, жовті", "price": 790},
+                {"id": 35, "name": "Шорти Asics, сірі", "price": 730}
+            ],
+            "Кофти": [
+                {"id": 36, "name": "Кофта NIKE, біла", "price": 1200},
+                {"id": 37, "name": "Кофта Adidas, чорна", "price": 1250},
+                {"id": 38, "name": "Кофта Puma, червона", "price": 1300},
+                {"id": 39, "name": "Кофта Reebok, синя", "price": 1220},
+                {"id": 40, "name": "Кофта Under Armour, зелена", "price": 1270},
+                {"id": 41, "name": "Кофта New Balance, жовта", "price": 1290},
+                {"id": 42, "name": "Кофта Asics, сіра", "price": 1230}
+            ]
+        }
         self.cart = []
         self.address = ""
         self.payment_method = ""
 
     def show_clothes(self):
-        # Показує доступний одяг та дозволяє додавати його до корзини
+        categories = list(self.clothes.keys())
         while True:
-            print("\nДоступний одяг:")
-            for item in self.clothes:
+            print("\nДоступні категорії одягу:")
+            for i, category in enumerate(categories, 1):
+                print(f"{i}. {category}")
+            print("\nВведіть номер категорії для перегляду або '0' для виходу:")
+            choice = input("Ваш вибір: ")
+            if choice == "0":
+                break
+            else:
+                try:
+                    category_index = int(choice) - 1
+                    if 0 <= category_index < len(categories):
+                        self.show_category_items(categories[category_index])
+                    else:
+                        print("Неправильний номер категорії. Будь ласка, спробуйте ще раз.")
+                except ValueError:
+                    print("Неправильний ввід. Будь ласка, введіть число.")
+
+    def show_category_items(self, category):
+        while True:
+            print(f"\nДоступний одяг у категорії {category}:")
+            items = self.clothes[category]
+            for item in items:
                 print(f'{item["id"]}. {item["name"]} - {item["price"]} грн')
             print("\nВведіть ID одягу для додавання до корзини або '0' для виходу:")
             choice = input("Ваш вибір: ")
             if choice == "0":
-                break  # Вихід з меню показу одягу
+                break
             else:
                 try:
                     item_id = int(choice)
-                    self.add_to_cart(item_id)
+                    self.add_to_cart(item_id, items)
                 except ValueError:
                     print("Неправильний ввід. Будь ласка, введіть число.")
 
-    def add_to_cart(self, item_id):
-        # Додає вибраний одяг до корзини
-        item = next((x for x in self.clothes if x["id"] == item_id), None)
+    def add_to_cart(self, item_id, items):
+        item = next((x for x in items if x["id"] == item_id), None)
         if item:
             self.cart.append(item)
             print(f'{item["name"]} додано до корзини.')
@@ -37,20 +106,17 @@ class Shop:
             print("Неправильний ID одягу.")
 
     def show_cart(self):
-        # Показує одяг, який знаходиться в корзині
         if not self.cart:
             print("Ваша корзина порожня.")
         else:
             print("\nВаш кошик:")
             for item in self.cart:
                 print(f'{item["name"]} - {item["price"]} грн')
-    
+
     def enter_address(self):
-        # Запитує адресу доставки у користувача
         self.address = input("Введіть адресу доставки: ")
 
     def choose_payment_method(self):
-        # Запитує спосіб оплати у користувача
         print("Виберіть спосіб оплати:")
         print("1. Картка")
         print("2. Готівка при отриманні")
@@ -63,13 +129,12 @@ class Shop:
             print("Неправильний вибір.")
 
     def checkout(self):
-        # Процедура оформлення замовлення
         if not self.cart:
             print("Ваша корзина порожня.")
             return
 
-        self.enter_address()  # Введення адреси доставки
-        self.choose_payment_method()  # Вибір способу оплати
+        self.enter_address()
+        self.choose_payment_method()
 
         if not self.address:
             print("Введіть адресу доставки.")
@@ -78,7 +143,6 @@ class Shop:
             print("Виберіть спосіб оплати.")
             return
 
-        # Показує підсумок замовлення
         print("\nПідсумок замовлення:")
         total = 0
         for item in self.cart:
@@ -91,7 +155,6 @@ class Shop:
 
 
 def main():
-    # Основне меню програми
     shop = Shop()
 
     while True:
@@ -104,14 +167,14 @@ def main():
         choice = input("Виберіть пункт меню: ")
 
         if choice == "1":
-            shop.show_clothes()  # Показує доступний одяг
+            shop.show_clothes()
         elif choice == "2":
-            shop.show_cart()  # Показує корзину
+            shop.show_cart()
         elif choice == "3":
-            shop.checkout()  # Початок оформлення замовлення
+            shop.checkout()
         elif choice == "4":
             print("До побачення!")
-            break  # Вихід з програми
+            break
         else:
             print("Неправильний вибір. Спробуйте ще раз.")
 
