@@ -1,6 +1,5 @@
 class Shop:
     def __init__(self):
-        # Ініціалізація магазину зі списком одягу, корзиною, адресою та методом оплати
         self.clothes = [
             {"id": 1, "name": "Футболка", "price": 500},
             {"id": 2, "name": "Штани", "price": 1000},
@@ -9,9 +8,9 @@ class Shop:
         self.cart = []
         self.address = ""
         self.payment_method = ""
+        self.order_history = []  # Історія замовлень
 
     def show_clothes(self):
-        # Показує доступний одяг та дозволяє додавати його до корзини
         while True:
             print("\nДоступний одяг:")
             for item in self.clothes:
@@ -19,7 +18,7 @@ class Shop:
             print("\nВведіть ID одягу для додавання до корзини або '0' для виходу:")
             choice = input("Ваш вибір: ")
             if choice == "0":
-                break  # Вихід з меню показу одягу
+                break
             else:
                 try:
                     item_id = int(choice)
@@ -28,7 +27,6 @@ class Shop:
                     print("Неправильний ввід. Будь ласка, введіть число.")
 
     def add_to_cart(self, item_id):
-        # Додає вибраний одяг до корзини
         item = next((x for x in self.clothes if x["id"] == item_id), None)
         if item:
             self.cart.append(item)
@@ -37,20 +35,33 @@ class Shop:
             print("Неправильний ID одягу.")
 
     def show_cart(self):
-        # Показує одяг, який знаходиться в корзині
         if not self.cart:
             print("Ваша корзина порожня.")
         else:
             print("\nВаш кошик:")
             for item in self.cart:
                 print(f'{item["name"]} - {item["price"]} грн')
-    
+            print("Введіть ID товару для видалення з корзини або '0' для виходу:")
+            choice = input("Ваш вибір: ")
+            if choice != "0":
+                try:
+                    item_id = int(choice)
+                    self.remove_from_cart(item_id)
+                except ValueError:
+                    print("Неправильний ввід. Будь ласка, введіть число.")
+
+    def remove_from_cart(self, item_id):
+        item = next((x for x in self.cart if x["id"] == item_id), None)
+        if item:
+            self.cart.remove(item)
+            print(f'{item["name"]} видалено з корзини.')
+        else:
+            print("Неправильний ID одягу.")
+
     def enter_address(self):
-        # Запитує адресу доставки у користувача
         self.address = input("Введіть адресу доставки: ")
 
     def choose_payment_method(self):
-        # Запитує спосіб оплати у користувача
         print("Виберіть спосіб оплати:")
         print("1. Картка")
         print("2. Готівка при отриманні")
@@ -63,13 +74,12 @@ class Shop:
             print("Неправильний вибір.")
 
     def checkout(self):
-        # Процедура оформлення замовлення
         if not self.cart:
             print("Ваша корзина порожня.")
             return
 
-        self.enter_address()  # Введення адреси доставки
-        self.choose_payment_method()  # Вибір способу оплати
+        self.enter_address()
+        self.choose_payment_method()
 
         if not self.address:
             print("Введіть адресу доставки.")
@@ -78,7 +88,6 @@ class Shop:
             print("Виберіть спосіб оплати.")
             return
 
-        # Показує підсумок замовлення
         print("\nПідсумок замовлення:")
         total = 0
         for item in self.cart:
@@ -89,9 +98,42 @@ class Shop:
         print(f'Спосіб оплати: {self.payment_method}')
         print("Дякуємо за ваше замовлення!")
 
+        order = {
+            "items": self.cart.copy(),
+            "total": total,
+            "address": self.address,
+            "payment_method": self.payment_method
+        }
+        self.order_history.append(order)
+        self.cart.clear()
+
+    def add_new_clothes(self):
+        print("Додавання нового товару:")
+        try:
+            name = input("Введіть назву товару: ")
+            price = int(input("Введіть ціну товару (грн): "))
+            new_id = max([item["id"] for item in self.clothes]) + 1
+            new_item = {"id": new_id, "name": name, "price": price}
+            self.clothes.append(new_item)
+            print(f'{name} додано до асортименту.')
+        except ValueError:
+            print("Неправильний ввід. Ціна повинна бути числом.")
+
+    def show_order_history(self):
+        if not self.order_history:
+            print("Історія замовлень порожня.")
+        else:
+            print("\nІсторія замовлень:")
+            for order in self.order_history:
+                print("\nЗамовлення:")
+                for item in order["items"]:
+                    print(f'{item["name"]} - {item["price"]} грн')
+                print(f'Загальна сума: {order["total"]} грн')
+                print(f'Адреса доставки: {order["address"]}')
+                print(f'Спосіб оплати: {order["payment_method"]}')
+
 
 def main():
-    # Основне меню програми
     shop = Shop()
 
     while True:
@@ -99,22 +141,27 @@ def main():
         print("1. Показати одяг")
         print("2. Корзина")
         print("3. Оформити замовлення")
-        print("4. Вийти")
+        print("4. Додати новий товар")
+        print("5. Історія замовлень")
+        print("6. Вийти")
 
         choice = input("Виберіть пункт меню: ")
 
         if choice == "1":
-            shop.show_clothes()  # Показує доступний одяг
+            shop.show_clothes()
         elif choice == "2":
-            shop.show_cart()  # Показує корзину
+            shop.show_cart()
         elif choice == "3":
-            shop.checkout()  # Початок оформлення замовлення
+            shop.checkout()
         elif choice == "4":
+            shop.add_new_clothes()
+        elif choice == "5":
+            shop.show_order_history()
+        elif choice == "6":
             print("До побачення!")
-            break  # Вихід з програми
+            break
         else:
             print("Неправильний вибір. Спробуйте ще раз.")
-
 
 if __name__ == "__main__":
     main()
