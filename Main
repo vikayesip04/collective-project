@@ -124,8 +124,8 @@ class Shop:
             print("Історія замовлень порожня.")
         else:
             print("\nІсторія замовлень:")
-            for order in self.order_history:
-                print("\nЗамовлення:")
+            for idx, order in enumerate(self.order_history):
+                print(f"\nЗамовлення #{idx + 1}:")
                 for item in order["items"]:
                     print(f'{item["name"]} - {item["price"]} грн')
                 print(f'Загальна сума: {order["total"]} грн')
@@ -170,6 +170,21 @@ class Shop:
         else:
             print("Замовлення з таким номером не знайдено.")
 
+    def show_cheapest_clothes(self):
+        cheapest_items = sorted(self.clothes, key=lambda x: x["price"])[:3]
+        print("\nНайменш дорогі товари:")
+        for item in cheapest_items:
+            print(f'{item["id"]}. {item["name"]} - {item["price"]} грн')
+
+    def sort_clothes_by_price(self, ascending=True):
+        sorted_clothes = sorted(self.clothes, key=lambda x: x["price"], reverse=not ascending)
+        print("\nТовари, відсортовані за ціною:")
+        for item in sorted_clothes:
+            print(f'{item["id"]}. {item["name"]} - {item["price"]} грн')
+
+    def total_sales_amount(self):
+        total_sales = sum(order["total"] for order in self.order_history)
+        print(f'\nЗагальна сума всіх замовлень: {total_sales} грн')
 
 def main():
     shop = Shop()
@@ -184,7 +199,10 @@ def main():
         print("6. Пошук товару")
         print("7. Редагувати товар")
         print("8. Деталі замовлення")
-        print("9. Вийти")
+        print("9. Показати найдешевші товари")
+        print("10. Сортувати товари за ціною")
+        print("11. Загальна сума всіх замовлень")
+        print("12. Вийти")
 
         choice = input("Виберіть пункт меню: ")
 
@@ -214,6 +232,18 @@ def main():
             except ValueError:
                 print("Неправильний ввід. Номер замовлення повинен бути числом.")
         elif choice == "9":
+            shop.show_cheapest_clothes()
+        elif choice == "10":
+            order = input("Введіть 'asc' для сортування за зростанням або 'desc' для сортування за спаданням: ")
+            if order == "asc":
+                shop.sort_clothes_by_price(ascending=True)
+            elif order == "desc":
+                shop.sort_clothes_by_price(ascending=False)
+            else:
+                print("Неправильний вибір.")
+        elif choice == "11":
+            shop.total_sales_amount()
+        elif choice == "12":
             print("До побачення!")
             break
         else:
