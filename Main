@@ -132,6 +132,44 @@ class Shop:
                 print(f'Адреса доставки: {order["address"]}')
                 print(f'Спосіб оплати: {order["payment_method"]}')
 
+    def search_clothes_by_name(self, name):
+        results = [item for item in self.clothes if name.lower() in item["name"].lower()]
+        if results:
+            print("\nРезультати пошуку:")
+            for item in results:
+                print(f'{item["id"]}. {item["name"]} - {item["price"]} грн')
+        else:
+            print("Товар не знайдено.")
+
+    def edit_clothes(self, item_id):
+        item = next((x for x in self.clothes if x["id"] == item_id), None)
+        if item:
+            print(f'Редагування товару: {item["name"]}')
+            try:
+                new_name = input(f'Нова назва ({item["name"]}): ')
+                new_price = input(f'Нова ціна ({item["price"]} грн): ')
+                if new_name:
+                    item["name"] = new_name
+                if new_price:
+                    item["price"] = int(new_price)
+                print("Товар успішно відредаговано.")
+            except ValueError:
+                print("Неправильний ввід. Ціна повинна бути числом.")
+        else:
+            print("Товар з таким ID не знайдено.")
+
+    def show_order_details(self, order_id):
+        if 0 <= order_id < len(self.order_history):
+            order = self.order_history[order_id]
+            print("\nДеталі замовлення:")
+            for item in order["items"]:
+                print(f'{item["name"]} - {item["price"]} грн')
+            print(f'Загальна сума: {order["total"]} грн')
+            print(f'Адреса доставки: {order["address"]}')
+            print(f'Спосіб оплати: {order["payment_method"]}')
+        else:
+            print("Замовлення з таким номером не знайдено.")
+
 
 def main():
     shop = Shop()
@@ -143,7 +181,10 @@ def main():
         print("3. Оформити замовлення")
         print("4. Додати новий товар")
         print("5. Історія замовлень")
-        print("6. Вийти")
+        print("6. Пошук товару")
+        print("7. Редагувати товар")
+        print("8. Деталі замовлення")
+        print("9. Вийти")
 
         choice = input("Виберіть пункт меню: ")
 
@@ -158,6 +199,21 @@ def main():
         elif choice == "5":
             shop.show_order_history()
         elif choice == "6":
+            name = input("Введіть назву товару для пошуку: ")
+            shop.search_clothes_by_name(name)
+        elif choice == "7":
+            try:
+                item_id = int(input("Введіть ID товару для редагування: "))
+                shop.edit_clothes(item_id)
+            except ValueError:
+                print("Неправильний ввід. ID повинно бути числом.")
+        elif choice == "8":
+            try:
+                order_id = int(input("Введіть номер замовлення: "))
+                shop.show_order_details(order_id)
+            except ValueError:
+                print("Неправильний ввід. Номер замовлення повинен бути числом.")
+        elif choice == "9":
             print("До побачення!")
             break
         else:
